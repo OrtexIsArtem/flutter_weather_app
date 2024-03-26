@@ -23,6 +23,14 @@ final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: AppTheme.border,
         suffixIconColor: AppColors.secondary,
+        fillColor: AppColors.bgSecondary,
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 11),
+        hintStyle: TextStyle(
+          fontFamily: 'SFCompact',
+          fontSize: 17,
+          color: AppColors.secondary.withOpacity(0.6),
+        ),
       ),
     );
   }
