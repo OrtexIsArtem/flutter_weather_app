@@ -7,16 +7,20 @@ class AppSvg extends StatelessWidget {
     super.key,
     required this.path,
     this.color = AppColors.primaryIcon,
+    this.size,
   });
 
   final String path;
   final Color color;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       path,
       colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      width: size,
+      height: size,
     );
   }
 }
