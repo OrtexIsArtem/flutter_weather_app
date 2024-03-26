@@ -5,13 +5,15 @@ class _CityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cities = context.select((CityBloc bloc) => bloc.state.cities);
     return ListView.builder(
-      itemCount: 20,
+      itemCount: cities.length,
       itemBuilder: (_, index) {
+        final city = cities[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 20),
           child: CityTile(
-            cityName: '$index',
+            cityName: '${city.city}, ${city.country}',
             onTap: () {},
           ),
         );
