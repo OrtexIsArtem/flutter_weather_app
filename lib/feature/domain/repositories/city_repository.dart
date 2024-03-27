@@ -9,4 +9,15 @@ abstract class CityRepository {
   ///
   /// Returns a [List] of [CityEntity] if successful, or a [Failure] otherwise.
   Future<Either<Failure, List<CityEntity>>> getAllCity();
+
+
+  /// Searches for cities based on the given [query].
+  /// The function returns a list of [CityEntity]s that match the query by city name or country.
+  ///
+  /// Parameters:
+  ///   - query: The query string to search for cities by name or country.
+  ///
+  /// Returns:
+  ///   - A list of [CityEntity]s containing cities that match the query.
+  Future<Either<Failure, List<CityEntity>>> searchCities(String? query);
 }

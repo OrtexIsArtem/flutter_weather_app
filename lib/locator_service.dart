@@ -5,6 +5,7 @@ import 'package:flutter_weather_app/feature/data/datasources/city_remote_data_so
 import 'package:flutter_weather_app/feature/data/repositories/city_repository_impl.dart';
 import 'package:flutter_weather_app/feature/domain/repositories/city_repository.dart';
 import 'package:flutter_weather_app/feature/domain/usecases/get_all_city.dart';
+import 'package:flutter_weather_app/feature/domain/usecases/search_cities.dart';
 import 'package:flutter_weather_app/feature/presentation/city_bloc/city_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -18,11 +19,13 @@ Future<void> init() async {
   sl.registerFactory(
     () => CityBloc(
       getAllCity: sl(),
+      searchCities: sl(),
     ),
   );
 
   // UseCases
   sl.registerLazySingleton(() => GetAllCity(sl()));
+  sl.registerLazySingleton(() => SearchCities(sl()));
 
   // Repository
   sl.registerLazySingleton<CityRepository>(

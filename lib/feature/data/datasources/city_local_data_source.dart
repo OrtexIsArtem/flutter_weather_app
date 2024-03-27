@@ -8,9 +8,13 @@ import 'dart:convert';
 /// Interface for a local data source that manages city data.
 abstract interface class CityLocalDataSource {
   /// Retrieves all cities from the local cache.
+  ///
+  /// can throw [CacheException]
   List<CityModel> getAllCityFromCache();
 
   /// Stores the given list of cities in the local cache.
+  ///
+  /// can throw [CacheException]
   Future<bool> setCityToCache(List<CityModel> cities);
 
   /// Checks if there are any cities in the local cache.

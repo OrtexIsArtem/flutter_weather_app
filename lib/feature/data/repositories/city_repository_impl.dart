@@ -3,6 +3,7 @@ import 'package:flutter_weather_app/core/errors/errors.dart';
 import 'package:flutter_weather_app/core/platform/network_info.dart';
 import 'package:flutter_weather_app/feature/data/datasources/city_local_data_source.dart';
 import 'package:flutter_weather_app/feature/data/datasources/city_remote_data_source.dart';
+import 'package:flutter_weather_app/feature/data/models/city_model.dart';
 import 'package:flutter_weather_app/feature/domain/entities/city_entity.dart';
 import 'package:flutter_weather_app/feature/domain/repositories/city_repository.dart';
 
@@ -27,15 +28,16 @@ class CityRepositoryImpl implements CityRepository {
     final bool hasCitiesInCache = localDataSource.hasCitiesInCache();
     if (hasCitiesInCache) {
       try {
-        final localCity = localDataSource.getAllCityFromCache();
-        return Right(localCity);
+        final List<CityModel> localCities =
+            localDataSource.getAllCityFromCache();
+        return Right(localCities);
       } on CacheException {
         return Left(CacheFailure());
       }
     }
     if (await networkInfo.isConnected) {
       try {
-        final remoteCity = await remoteDataSource.getAllCity();
+        final List<CityModel> remoteCity = await remoteDataSource.getAllCity();
         localDataSource.setCityToCache(remoteCity);
         return Right(remoteCity);
       } on ServerException {
@@ -43,6 +45,24 @@ class CityRepositoryImpl implements CityRepository {
       }
     } else {
       return Left(ConnectionFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CityEntity>>> searchCities(String? query) async {
+    try {
+      if (query == null || query.isEmpty) return const Right([]);
+
+      final List<CityModel> allLocalCities =
+          localDataSource.getAllCityFromCache();
+      final List<CityModel> filteredCities = allLocalCities.where((city) {
+        return city.city.toLowerCase().contains(query.toLowerCase()) ||
+            city.country.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+
+      return Right(filteredCities);
+    } on CacheException {
+      return Left(CacheFailure());
     }
   }
 }

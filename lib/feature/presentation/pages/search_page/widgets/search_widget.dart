@@ -5,7 +5,11 @@ class _SearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<CityBloc>();
     return TextFormField(
+      onChanged: (String value) {
+        bloc.add(SearchCityEvent(query: value));
+      },
       style: const TextStyle(
         fontSize: 17,
       ),
