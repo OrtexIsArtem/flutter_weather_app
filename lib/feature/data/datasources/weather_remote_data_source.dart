@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_weather_app/core/errors/errors.dart';
 import 'package:flutter_weather_app/feature/data/models/weather_model.dart';
 
+const String _baseUrl = 'https://api.open-meteo.com/v1';
+
 abstract interface class WeatherRemoteDataSource {
   Future<WeatherModel> getWeatherNow({
     required double latitude,
@@ -23,12 +25,20 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
     required double latitude,
     required double longitude,
   }) async {
-    final response = await client.get(
-      'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current_weather=true&timezone=auto',
-    );
+    try {
+      final response = await client.get(
+        '$_baseUrl/forecast',
+        queryParameters: {
+          'latitude': latitude,
+          'longitude': longitude,
+          'current_weather': true,
+          'timezone': 'auto'
+        },
+      );
 
-    if (response.statusCode != 200) throw ServerException();
-
-    return WeatherModel.fromJson(response.data);
+      return WeatherModel.fromJsonApi(response.data);
+    } catch (e) {
+      throw ServerException();
+    }
   }
 }

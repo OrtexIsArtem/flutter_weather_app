@@ -25,7 +25,7 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     on<SearchCityEvent>(_onSearchCities);
     on<SelectCityEvent>(_onSelectCity);
     on<LoadLastCityEvent>(_onLoadLastCity);
-    add(const LoadLastCityEvent());
+    on<ClearSearchResultEvent>(_onClearSearchResult);
   }
 
   final GetAllCity getAllCity;
@@ -60,9 +60,12 @@ class CityBloc extends Bloc<CityEvent, CityState> {
         await saveCity(SaveCityParams(city: event.selectedCity));
     failureOrSave.fold(
       (error) {
-        emit(state.copyWith(
-          error: CityErrorLoading(message: ''),
-        ));
+        if (error.runtimeType == ConnectionFailure) {
+          return emit(state.copyWith(
+            error: CityErrorLoading(message: _mapFailureToMessage(error)),
+          ));
+        }
+        emit(state.copyWith(isLoading: false));
       },
       (isSuccess) {
         emit(state.copyWith(selectedCity: event.selectedCity));
@@ -74,6 +77,7 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     SearchCityEvent event,
     Emitter<CityState> emit,
   ) async {
+    add(const GetAllCityEvent());
     emit(state.copyWith(
       isLoading: true,
       isSearching: true,
@@ -96,7 +100,7 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     );
   }
 
-  _onLoadLastCity(
+  Future<void> _onLoadLastCity(
     LoadLastCityEvent event,
     Emitter<CityState> emit,
   ) async {
@@ -106,7 +110,7 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     failureOrCity.fold(
       (error) {
         emit(state.copyWith(
-          error: CityErrorLoading(message: ''),
+          error: CityErrorLoading(message: _mapFailureToMessage(error)),
         ));
       },
       (city) {
@@ -118,12 +122,21 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     );
   }
 
+  void _onClearSearchResult(
+    ClearSearchResultEvent event,
+    Emitter<CityState> emit,
+  ) {
+    emit(state.copyWith(searchedCities: []));
+  }
+
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
         return 'Failed load cities from server';
-      case CacheException:
+      case CacheFailure:
         return 'Failed load cities from cache';
+      case ConnectionFailure:
+        return 'Failed need internet connection';
       default:
         return 'Unexpected Failure';
     }

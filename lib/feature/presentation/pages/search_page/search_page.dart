@@ -9,54 +9,53 @@ import 'package:flutter_weather_app/utils/app_icons.dart';
 
 part 'background_page_wrapper.dart';
 
+part 'bloc_listeners_wrapper.dart';
+
 part 'widgets/search_widget.dart';
 
 part 'widgets/city_list.dart';
+
+part 'widgets/empty_city_list.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CityBloc, CityState>(
-      listener: (context, state) {
-        context.read<WeatherBloc>().add(GetCityWeatherEvent(
-              latitude: state.selectedCity!.lat,
-              longitude: state.selectedCity!.lng,
-            ));
-        Navigator.pop(context);
-      },
-      listenWhen: (prev, current) =>
-          prev.selectedCity != current.selectedCity &&
-          current.selectedCity != null,
-      child: _BackgroundPageWrapper(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                onPressed: () {},
-                icon: const AppSvg(path: AppIcons.back),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _SearchWidget(),
-                    SizedBox(height: 12),
-                    Expanded(
-                      child: _CityList(),
-                    ),
-                  ],
+    return _BlocListenersWrapper(
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: _BackgroundPageWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const AppSvg(path: AppIcons.back),
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 10),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _SearchWidget(),
+                      SizedBox(height: 12),
+                      Expanded(
+                        child: _CityList(),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

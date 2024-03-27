@@ -18,12 +18,21 @@ class WeatherModel extends WeatherEntity {
       ];
 
   /// Constructs a [WeatherEntity] instance from a JSON object.
-  factory WeatherModel.fromJson(Map<String, dynamic> json) {
+  factory WeatherModel.fromJsonApi(Map<String, dynamic> json) {
     return WeatherModel(
       time: json['current_weather']['time'],
       temperature: json['current_weather']['temperature'],
       windSpeed: json['current_weather']['windspeed'],
       speedUnit: json['current_weather_units']['windspeed'],
+    );
+  }
+
+  factory WeatherModel.fromJsonCache(Map<String, dynamic> json) {
+    return WeatherModel(
+      time: json['time'],
+      temperature: json['temperature'],
+      windSpeed: json['windspeed'],
+      speedUnit: json['speedUnit'],
     );
   }
 

@@ -13,11 +13,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     required this.getCityWeather,
   }) : super(const WeatherState()) {
     on<GetCityWeatherEvent>(_onGetCityWeather);
-
-    add(const GetCityWeatherEvent(
-      latitude: 50.4500,
-      longitude: 30.5233,
-    ));
   }
 
   final GetCityWeather getCityWeather;
@@ -37,7 +32,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     failureOrCityWeather.fold(
       (failure) {
         emit(state.copyWith(
-          error: const WeatherErrorLoading(message: ''),
+          error: WeatherErrorLoading(message: failure.message ?? ''),
         ));
       },
       (WeatherEntity weather) {

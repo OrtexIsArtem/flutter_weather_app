@@ -24,7 +24,7 @@ final GetIt sl = GetIt.instance;
 
 Future<void> init() async {
   // BLoC / Cubit
-  sl.registerFactory(
+  sl.registerLazySingleton(
     () => CityBloc(
       getAllCity: sl(),
       searchCities: sl(),
@@ -32,7 +32,7 @@ Future<void> init() async {
       getLastCity: sl(),
     ),
   );
-  sl.registerFactory(
+  sl.registerLazySingleton(
     () => WeatherBloc(
       getCityWeather: sl(),
     ),

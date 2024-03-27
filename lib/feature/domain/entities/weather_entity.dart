@@ -30,6 +30,15 @@ class WeatherEntity extends Equatable {
     );
   }
 
+  factory WeatherEntity.fromJsonCache(Map<String, dynamic> json) {
+    return WeatherEntity(
+      time: json['current_weather']['time'],
+      temperature: json['current_weather']['temperature'],
+      windSpeed: json['current_weather']['windspeed'],
+      speedUnit: json['current_weather_units']['windspeed'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'time': time,

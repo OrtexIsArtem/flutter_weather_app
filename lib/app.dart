@@ -14,8 +14,12 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CityBloc>(
-            create: (context) => sl<CityBloc>()..add(const GetAllCityEvent())),
-        BlocProvider<WeatherBloc>(create: (context) => sl<WeatherBloc>()),
+          create: (context) => sl<CityBloc>()..add(const LoadLastCityEvent()),
+        ),
+        BlocProvider<WeatherBloc>(
+          create: (context) =>
+              sl<WeatherBloc>()..add(const GetCityWeatherEvent()),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter weather app',

@@ -44,3 +44,10 @@ class LoadLastCityEvent extends CityEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ClearSearchResultEvent extends CityEvent {
+  const ClearSearchResultEvent();
+
+  @override
+  List<Object?> get props => [];
+}

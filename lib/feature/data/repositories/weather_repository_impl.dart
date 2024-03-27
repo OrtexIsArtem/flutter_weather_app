@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_weather_app/core/constants/app_base_data.dart';
 import 'package:flutter_weather_app/core/errors/errors.dart';
 import 'package:flutter_weather_app/core/platform/network_info.dart';
 import 'package:flutter_weather_app/feature/data/datasources/weather_local_data_source.dart';
@@ -20,26 +21,26 @@ class WeatherRepositoryImpl implements WeatherRepository {
 
   @override
   Future<Either<Failure, WeatherEntity>> getWeatherNow({
-    required double latitude,
-    required double longitude,
+    required double? latitude,
+    required double? longitude,
   }) async {
     if (await networkInfo.isConnected) {
       try {
         final WeatherModel weather = await remoteDataSource.getWeatherNow(
-          latitude: latitude,
-          longitude: longitude,
+          latitude: latitude ?? BaseLocation.latitude,
+          longitude: longitude ?? BaseLocation.longitude,
         );
         await localeDataSource.setWeatherToCache(weather);
         return Right(weather);
       } on ServerException {
-        return Left(ServerFailure());
+        return const Left(ServerFailure());
       }
     } else {
       try {
         final weather = await localeDataSource.getLastCachedWeather();
         return Right(weather);
-      } on CacheException {
-        return Left(CacheFailure());
+      } on CacheException catch(e) {
+        return Left(CacheFailure(e.message));
       }
     }
   }

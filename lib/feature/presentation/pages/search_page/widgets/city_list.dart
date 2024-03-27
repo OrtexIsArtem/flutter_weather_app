@@ -12,6 +12,9 @@ class _CityList extends StatelessWidget {
     final vCities =
         cityState.isSearching ? cityState.searchedCities : cityState.cities;
 
+    if (vCities.isEmpty) {
+      return const _EmptyCityList();
+    }
     return ListView.builder(
       itemCount: vCities.length,
       itemBuilder: (_, index) {

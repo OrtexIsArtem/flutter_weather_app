@@ -38,9 +38,7 @@ class CityLocalDataSourceImpl implements CityLocalDataSource {
   List<CityModel> getAllCityFromCache() {
     final List<String> jsonCityList =
         sharedPreferences.getStringList(AppLocalKeys.cityList) ?? [];
-    if (jsonCityList.isEmpty) {
-      throw CacheException();
-    }
+
     return jsonCityList
         .map((city) => CityModel.fromJson(json.decode(city)))
         .toList();

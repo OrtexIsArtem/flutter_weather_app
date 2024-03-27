@@ -23,9 +23,9 @@ class WeatherLocalDataSourceImpl implements WeatherLocalDataSource {
   Future<WeatherModel> getLastCachedWeather() async {
     final jsonWeather = sharedPreferences.getString(AppLocalKeys.lastWeather);
     if (jsonWeather == null || jsonWeather.isEmpty) {
-      throw CacheException();
+      throw CacheException('No data in cache');
     }
-    return WeatherModel.fromJson(json.decode(jsonWeather));
+    return WeatherModel.fromJsonCache(json.decode(jsonWeather));
   }
 
   @override
