@@ -10,6 +10,7 @@ class CityErrorLoading extends BlocError {
 class CityState extends Equatable {
   const CityState({
     this.isLoading = false,
+    this.isSearching = false,
     this.error,
     this.cities = const [],
     this.searchedCities = const [],
@@ -17,6 +18,9 @@ class CityState extends Equatable {
 
   /// Indicates whether the cities are currently being loaded.
   final bool isLoading;
+
+  /// Indicates whether the user is looking for cities in search
+  final bool isSearching;
 
   /// The error message in case of a cities loading failure.
   final CityErrorLoading? error;
@@ -29,12 +33,14 @@ class CityState extends Equatable {
 
   CityState copyWith({
     bool? isLoading,
+    bool? isSearching,
     CityErrorLoading? error,
     List<CityEntity>? cities,
     List<CityEntity>? searchedCities,
   }) {
     return CityState(
       isLoading: isLoading ?? false,
+      isSearching: isSearching ?? this.isSearching,
       error: error,
       cities: cities ?? this.cities,
       searchedCities: searchedCities ?? this.searchedCities,
@@ -44,6 +50,7 @@ class CityState extends Equatable {
   @override
   List<Object> get props => [
         isLoading,
+        isSearching,
         cities,
         searchedCities,
       ];

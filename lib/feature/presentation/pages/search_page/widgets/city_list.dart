@@ -6,10 +6,15 @@ class _CityList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cities = context.select((CityBloc bloc) => bloc.state.cities);
+    final searchedCities = context.select((CityBloc bloc) => bloc.state.searchedCities);
+    final isSearching = context.select((CityBloc bloc) => bloc.state.isSearching);
+
+    final vCities = isSearching ? searchedCities : cities;
+
     return ListView.builder(
-      itemCount: cities.length,
+      itemCount: vCities.length,
       itemBuilder: (_, index) {
-        final city = cities[index];
+        final city = vCities[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 20),
           child: CityTile(
