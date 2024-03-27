@@ -38,7 +38,7 @@ class CityRepositoryImpl implements CityRepository {
     if (await networkInfo.isConnected) {
       try {
         final List<CityModel> remoteCity = await remoteDataSource.getAllCity();
-        localDataSource.setCityToCache(remoteCity);
+        localDataSource.setCitiesToCache(remoteCity);
         return Right(remoteCity);
       } on ServerException {
         return Left(ServerFailure());
@@ -61,6 +61,26 @@ class CityRepositoryImpl implements CityRepository {
       }).toList();
 
       return Right(filteredCities);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> saveCity(CityEntity city) async {
+    try {
+      final res = await localDataSource.setCityToCache(city as CityModel);
+      return Right(res);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, CityEntity?>> gatLastCity() async {
+    try {
+      final res = await localDataSource.getLastCity();
+      return Right(res);
     } on CacheException {
       return Left(CacheFailure());
     }

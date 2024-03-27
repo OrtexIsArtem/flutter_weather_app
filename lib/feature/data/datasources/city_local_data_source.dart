@@ -15,10 +15,14 @@ abstract interface class CityLocalDataSource {
   /// Stores the given list of cities in the local cache.
   ///
   /// can throw [CacheException]
-  Future<bool> setCityToCache(List<CityModel> cities);
+  Future<bool> setCitiesToCache(List<CityModel> cities);
 
   /// Checks if there are any cities in the local cache.
   bool hasCitiesInCache();
+
+  Future<bool> setCityToCache(CityModel city);
+
+  Future<CityModel?> getLastCity();
 }
 
 /// Implementation of [CityLocalDataSource] that uses shared preferences to manage city data locally.
@@ -43,7 +47,7 @@ class CityLocalDataSourceImpl implements CityLocalDataSource {
   }
 
   @override
-  Future<bool> setCityToCache(List<CityModel> cities) async {
+  Future<bool> setCitiesToCache(List<CityModel> cities) async {
     final List<String> jsonCityList =
         cities.map((city) => json.encode(city.toJson())).toList();
 
@@ -61,5 +65,28 @@ class CityLocalDataSourceImpl implements CityLocalDataSource {
   @override
   bool hasCitiesInCache() {
     return sharedPreferences.getBool(AppLocalKeys.cityListIsNotEmpty) ?? false;
+  }
+
+  @override
+  Future<bool> setCityToCache(CityModel city) async {
+    final jsonCity = json.encode(city.toJson());
+
+    final response = await sharedPreferences.setString(
+      AppLocalKeys.lastCity,
+      jsonCity,
+    );
+
+    if (!response) throw CacheException();
+
+    return Future.value(response);
+  }
+
+  @override
+  Future<CityModel?> getLastCity() async {
+    final jsonCity = sharedPreferences.getString(AppLocalKeys.lastCity);
+
+    if (jsonCity == null || jsonCity.isEmpty) return null;
+    final city = json.decode(jsonCity);
+    return Future.value(CityModel.fromJson(city));
   }
 }

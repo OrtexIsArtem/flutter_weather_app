@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_weather_app/core/constants/app_colors.dart';
 import 'package:flutter_weather_app/feature/presentation/city_bloc/city_bloc.dart';
 import 'package:flutter_weather_app/feature/presentation/pages/search_page/widgets/city_tile.dart';
+import 'package:flutter_weather_app/feature/presentation/weather_bloc/weather_bloc.dart';
 import 'package:flutter_weather_app/feature/presentation/widgets/widgets.dart';
 import 'package:flutter_weather_app/utils/app_icons.dart';
 
@@ -17,34 +18,46 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BackgroundPageWrapper(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              onPressed: () {},
-              icon: const AppSvg(path: AppIcons.back),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _SearchWidget(),
-                  SizedBox(height: 12),
-                  Expanded(
-                    child: _CityList(),
-                  ),
-                ],
+    return BlocListener<CityBloc, CityState>(
+      listener: (context, state) {
+        context.read<WeatherBloc>().add(GetCityWeatherEvent(
+              latitude: state.selectedCity!.lat,
+              longitude: state.selectedCity!.lng,
+            ));
+        Navigator.pop(context);
+      },
+      listenWhen: (prev, current) =>
+          prev.selectedCity != current.selectedCity &&
+          current.selectedCity != null,
+      child: _BackgroundPageWrapper(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: () {},
+                icon: const AppSvg(path: AppIcons.back),
               ),
             ),
-          )
-        ],
+            const SizedBox(height: 10),
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _SearchWidget(),
+                    SizedBox(height: 12),
+                    Expanded(
+                      child: _CityList(),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

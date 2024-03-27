@@ -5,14 +5,19 @@ class _WeatherInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final weather =
+        context.select((WeatherBloc bloc) => bloc.state.currentWeather);
+    final selectedCity =
+        context.select((CityBloc bloc) => bloc.state.selectedCity);
+
     return Column(
       children: [
         Text(
-          'Montreal',
+          selectedCity?.city ?? '',
           style: context.textTheme.bodyLarge,
         ),
         Text(
-          '19°',
+          '${weather?.temperature}°',
           style: context.textTheme.bodyLarge?.copyWith(
             fontSize: 96,
             fontWeight: FontWeight.w100,
@@ -26,7 +31,7 @@ class _WeatherInfo extends StatelessWidget {
           ),
         ),
         Text(
-          '10 km/h',
+          '${weather?.windSpeed} ${weather?.speedUnit}',
           style: context.textTheme.bodySmall,
         ),
       ],
