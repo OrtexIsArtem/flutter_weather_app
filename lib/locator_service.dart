@@ -41,7 +41,10 @@ Future<void> init() async {
   // UseCases
   sl.registerLazySingleton(() => GetAllCity(sl()));
   sl.registerLazySingleton(() => SearchCities(sl()));
-  sl.registerLazySingleton(() => GetCityWeather(sl()));
+  sl.registerLazySingleton(() => GetCityWeather(
+        weatherRepository: sl(),
+        cityRepository: sl(),
+      ));
   sl.registerLazySingleton(() => SaveCity(sl()));
   sl.registerLazySingleton(() => GetLastCity(sl()));
 
