@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_app/constants/app_colors.dart';
+import 'package:flutter_weather_app/core/constants/app_colors.dart';
 
 final class AppTheme {
   const AppTheme._();
@@ -23,6 +23,14 @@ final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: AppTheme.border,
         suffixIconColor: AppColors.secondary,
+        fillColor: AppColors.bgSecondary,
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 11),
+        hintStyle: TextStyle(
+          fontFamily: 'SFCompact',
+          fontSize: 17,
+          color: AppColors.secondary.withOpacity(0.6),
+        ),
       ),
     );
   }

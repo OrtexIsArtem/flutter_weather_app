@@ -10,8 +10,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  # support svg
   flutter_svg: ^2.0.10+1
+  # http client
+  dio: ^5.4.2
+  # Either only
+  dartz: ^0.10.1
+  # state manager
+  flutter_bloc: ^8.1.5
+  # simplifies comparing objects for equality
+  equatable: ^2.0.5
+  # local storage
+  shared_preferences: ^2.2.2
+  # check internet connection
+  internet_connection_checker: ^1.0.0+1
+  # di only
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:
