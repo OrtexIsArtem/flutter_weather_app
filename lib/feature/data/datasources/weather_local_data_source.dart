@@ -7,8 +7,14 @@ import 'package:flutter_weather_app/feature/data/models/weather_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class WeatherLocalDataSource {
+  /// Retrieves the last cached weather data.
+  ///
+  /// Throws a [CacheException] if there is no data in the cache.
   Future<WeatherModel> getLastCachedWeather();
 
+  /// Caches the provided [weather] data.
+  ///
+  /// Returns `true` if the operation was successful, `false` otherwise.
   Future<bool> setWeatherToCache(WeatherModel weather);
 }
 
@@ -38,8 +44,8 @@ class WeatherLocalDataSourceImpl implements WeatherLocalDataSource {
     );
     if (response) {
       await sharedPreferences.setBool(AppLocalKeys.cityListIsNotEmpty, true);
-      debugPrint('weather are cached');
+      debugPrint('Weather is cached');
     }
-    return Future.value(response);
+    return response;
   }
 }

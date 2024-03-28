@@ -7,7 +7,13 @@ import 'package:flutter_weather_app/feature/data/models/weather_model.dart';
 import 'package:flutter_weather_app/feature/domain/entities/weather_entity.dart';
 import 'package:flutter_weather_app/feature/domain/repositories/weather_repository.dart';
 
+/// Implementation of the [WeatherRepository] interface.
+///
+/// This implementation checks the network status and fetches weather
+/// data either from a remote data source or from a local cache.
 class WeatherRepositoryImpl implements WeatherRepository {
+  /// Creates a [WeatherRepositoryImpl] instance with the specified
+  /// [remoteDataSource], [localeDataSource], and [networkInfo].
   const WeatherRepositoryImpl({
     required this.remoteDataSource,
     required this.localeDataSource,

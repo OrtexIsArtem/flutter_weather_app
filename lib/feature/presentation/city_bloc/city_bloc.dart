@@ -15,16 +15,29 @@ part 'city_state.dart';
 
 /// Represents the BLoC responsible for managing cities-related data.
 class CityBloc extends Bloc<CityEvent, CityState> {
+  /// Creates a [CityBloc] instance with the required dependencies.
+  ///
+  /// The [getAllCity], [searchCities], [saveCity], and [getLastCity] functions
+  /// are used for fetching and managing city data.
   CityBloc({
     required this.getAllCity,
     required this.searchCities,
     required this.saveCity,
     required this.getLastCity,
   }) : super(const CityState()) {
+    /// Handles the event to load all cities.
     on<GetAllCityEvent>(_onLoadCities);
+
+    /// Handles the event to search for cities.
     on<SearchCityEvent>(_onSearchCities);
+
+    /// Handles the event to select a city.
     on<SelectCityEvent>(_onSelectCity);
+
+    /// Handles the event to load the last selected city.
     on<LoadLastCityEvent>(_onLoadLastCity);
+
+    /// Handles the event to clear the search result.
     on<ClearSearchResultEvent>(_onClearSearchResult);
   }
 
@@ -122,6 +135,7 @@ class CityBloc extends Bloc<CityEvent, CityState> {
     );
   }
 
+  /// Maps a [Failure] object to a human-readable error message.
   void _onClearSearchResult(
     ClearSearchResultEvent event,
     Emitter<CityState> emit,

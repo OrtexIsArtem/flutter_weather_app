@@ -8,10 +8,15 @@ part 'weather_event.dart';
 
 part 'weather_state.dart';
 
+/// Represents the BLoC responsible for managing weather-related data.
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
+  /// Creates a [WeatherBloc] instance with the required dependencies.
+  ///
+  /// The [getCityWeather] function is used for fetching city weather data.
   WeatherBloc({
     required this.getCityWeather,
   }) : super(const WeatherState()) {
+    /// Handles the event to get weather data for a city.
     on<GetCityWeatherEvent>(_onGetCityWeather);
   }
 
