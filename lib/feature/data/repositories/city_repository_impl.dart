@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_weather_app/core/constants/app_base_data.dart';
 import 'package:flutter_weather_app/core/errors/errors.dart';
 import 'package:flutter_weather_app/core/platform/network_info.dart';
 import 'package:flutter_weather_app/feature/data/datasources/city_local_data_source.dart';
@@ -32,19 +33,19 @@ class CityRepositoryImpl implements CityRepository {
             localDataSource.getAllCityFromCache();
         return Right(localCities);
       } on CacheException {
-        return Left(CacheFailure());
+        return const Left(CacheFailure());
       }
     }
     if (await networkInfo.isConnected) {
       try {
         final List<CityModel> remoteCity = await remoteDataSource.getAllCity();
-        localDataSource.setCityToCache(remoteCity);
+        localDataSource.setCitiesToCache(remoteCity);
         return Right(remoteCity);
       } on ServerException {
-        return Left(ServerFailure());
+        return const Left(ServerFailure());
       }
     } else {
-      return Left(ConnectionFailure());
+      return const Left(ConnectionFailure());
     }
   }
 
@@ -62,7 +63,45 @@ class CityRepositoryImpl implements CityRepository {
 
       return Right(filteredCities);
     } on CacheException {
-      return Left(CacheFailure());
+      return const Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> saveCity(CityEntity city) async {
+    if (!(await networkInfo.isConnected)) {
+      return const Left(ConnectionFailure());
+    }
+    try {
+      final res = await localDataSource.setCityToCache(city as CityModel);
+      return Right(res);
+    } on CacheException {
+      return const Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, CityEntity?>> gatLastCity() async {
+    try {
+      final CityModel? city = await localDataSource.getLastCity();
+      if (city != null) {
+        return Right(city);
+      }
+      if (await networkInfo.isConnected) {
+        final List<CityModel> remoteCity = await remoteDataSource.getAllCity();
+        localDataSource.setCitiesToCache(remoteCity);
+        final CityModel defaultCity = remoteCity.firstWhere(
+          (city) =>
+              city.city.toLowerCase() == BaseLocation.cityName.toLowerCase(),
+        );
+        await localDataSource.setCityToCache(defaultCity);
+
+        return Right(defaultCity);
+      } else {
+        return const Left(ConnectionFailure());
+      }
+    } on CacheException {
+      return const Left(CacheFailure());
     }
   }
 }

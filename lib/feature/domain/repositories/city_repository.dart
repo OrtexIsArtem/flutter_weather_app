@@ -20,4 +20,20 @@ abstract class CityRepository {
   /// Returns:
   ///   - A list of [CityEntity]s containing cities that match the query.
   Future<Either<Failure, List<CityEntity>>> searchCities(String? query);
+
+
+  /// Saves a [city] to the repository.
+  ///
+  /// Parameters:
+  ///   - city: The city to be saved.
+  ///
+  /// Returns:
+  ///   - A boolean indicating whether the operation was successful.
+  Future<Either<Failure, bool>> saveCity(CityEntity city);
+
+  /// Retrieves the last saved city from the repository.
+  ///
+  /// Returns:
+  ///   - The last saved [CityEntity] if available, or a [Failure] otherwise.
+  Future<Either<Failure, CityEntity?>> gatLastCity();
 }

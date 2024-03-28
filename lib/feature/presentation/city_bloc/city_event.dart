@@ -25,3 +25,29 @@ class SearchCityEvent extends CityEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class SelectCityEvent extends CityEvent {
+  const SelectCityEvent({
+    required this.selectedCity,
+  });
+
+  final CityEntity selectedCity;
+
+  @override
+  List<Object?> get props => [selectedCity];
+}
+
+
+class LoadLastCityEvent extends CityEvent {
+  const LoadLastCityEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ClearSearchResultEvent extends CityEvent {
+  const ClearSearchResultEvent();
+
+  @override
+  List<Object?> get props => [];
+}

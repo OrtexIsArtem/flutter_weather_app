@@ -1,7 +1,18 @@
 part of '../search_page.dart';
 
-class _SearchWidget extends StatelessWidget {
+class _SearchWidget extends StatefulWidget {
   const _SearchWidget();
+
+  @override
+  State<_SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<_SearchWidget> {
+  @override
+  void initState() {
+    context.read<CityBloc>().add(const ClearSearchResultEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +24,7 @@ class _SearchWidget extends StatelessWidget {
       style: const TextStyle(
         fontSize: 17,
       ),
+      autofocus: true,
       decoration: InputDecoration(
         hintText: 'Search for a city',
         prefixIconConstraints: const BoxConstraints(maxWidth: 36, minWidth: 32),

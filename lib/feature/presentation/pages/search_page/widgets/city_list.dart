@@ -5,12 +5,16 @@ class _CityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cities = context.select((CityBloc bloc) => bloc.state.cities);
-    final searchedCities = context.select((CityBloc bloc) => bloc.state.searchedCities);
-    final isSearching = context.select((CityBloc bloc) => bloc.state.isSearching);
+    final cityState = context.watch<CityBloc>().state;
+    final cityBloc = context.read<CityBloc>();
 
-    final vCities = isSearching ? searchedCities : cities;
+    // TODO move logic to bloc?
+    final vCities =
+        cityState.isSearching ? cityState.searchedCities : cityState.cities;
 
+    if (vCities.isEmpty) {
+      return const _EmptyCityList();
+    }
     return ListView.builder(
       itemCount: vCities.length,
       itemBuilder: (_, index) {
@@ -19,7 +23,9 @@ class _CityList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 20),
           child: CityTile(
             cityName: '${city.city}, ${city.country}',
-            onTap: () {},
+            onTap: () {
+              cityBloc.add(SelectCityEvent(selectedCity: city));
+            },
           ),
         );
       },
